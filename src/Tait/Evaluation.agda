@@ -31,7 +31,7 @@ qtrCompSub a = consSubst a idSubst
 data _=>e_ : RawTerm -> RawTerm -> Type where
   evalStar : tmStar =>e tmStar
   evalPair : {a b : RawTerm} -> tmPair a b =>e tmPair a b
-  evalR : tmR =>e tmR
+  evalRefl : tmRefl =>e tmRefl
   evalEqTm : {A : RawType} {a : RawTerm} -> tmEq A a =>e tmEq A a
   evalClass : {a : RawTerm} -> tmClass a =>e tmClass a
   evalElSigma : {d m b c g : RawTerm}
@@ -68,7 +68,7 @@ tmClassInj p = cong tmClassRepr p
 evalSize : {t g : RawTerm} -> t =>e g -> ℕ
 evalSize evalStar = 0
 evalSize evalPair = 0
-evalSize evalR = 0
+evalSize evalRefl = 0
 evalSize evalEqTm = 0
 evalSize evalClass = 0
 evalSize (evalElSigma evd evm) = suc (evalSize evd + evalSize evm)
@@ -79,7 +79,7 @@ private
     -> (ev₁ : t =>e g) -> Acc _<_ (evalSize ev₁) -> (ev₂ : t =>e g') -> g ≡ g'
   evalDetTmAcc evalStar _ evalStar = refl
   evalDetTmAcc evalPair _ evalPair = refl
-  evalDetTmAcc evalR _ evalR = refl
+  evalDetTmAcc evalRefl _ evalRefl = refl
   evalDetTmAcc evalEqTm _ evalEqTm = refl
   evalDetTmAcc evalClass _ evalClass = refl
   evalDetTmAcc

@@ -87,7 +87,7 @@ mutual
   renTm rho tmStar = tmStar
   renTm rho (tmPair a b) = tmPair (renTm rho a) (renTm rho b)
   renTm rho (tmElSigma d m) = tmElSigma (renTm rho d) (renTm (raiseRen (raiseRen rho)) m)
-  renTm rho tmR = tmR
+  renTm rho tmRefl = tmRefl
   renTm rho (tmEq A a) = tmEq (renTy rho A) (renTm rho a)
   renTm rho (tmClass a) = tmClass (renTm rho a)
   renTm rho (tmElQtr l p) = tmElQtr (renTm (raiseRen rho) l) (renTm rho p)
@@ -126,7 +126,7 @@ mutual
       (renTmEq {rho = raiseRen (raiseRen rho)} {tau = raiseRen (raiseRen tau)}
         (raiseRen-apply-cong {rho = raiseRen rho} {tau = raiseRen tau}
           (raiseRen-apply-cong {rho = rho} {tau = tau} h)) m)
-  renTmEq h tmR = refl
+  renTmEq h tmRefl = refl
   renTmEq {rho} {tau} h (tmEq A a) =
     cong₂ tmEq (renTyEq {rho = rho} {tau = tau} h A)
       (renTmEq {rho = rho} {tau = tau} h a)
@@ -232,7 +232,7 @@ mutual
   subTm sigma tmStar = tmStar
   subTm sigma (tmPair a b) = tmPair (subTm sigma a) (subTm sigma b)
   subTm sigma (tmElSigma d m) = tmElSigma (subTm sigma d) (subTm (liftSubst (liftSubst sigma)) m)
-  subTm sigma tmR = tmR
+  subTm sigma tmRefl = tmRefl
   subTm sigma (tmEq A a) = tmEq (subTy sigma A) (subTm sigma a)
   subTm sigma (tmClass a) = tmClass (subTm sigma a)
   subTm sigma (tmElQtr l p) = tmElQtr (subTm (liftSubst sigma) l) (subTm sigma p)
@@ -289,7 +289,7 @@ mutual
       (subTmEq {sigma = liftSubst (liftSubst sigma)} {tau = liftSubst (liftSubst tau)}
         (liftSubst-apply-cong {sigma = liftSubst sigma} {tau = liftSubst tau}
           (liftSubst-apply-cong {sigma = sigma} {tau = tau} h)) m)
-  subTmEq h tmR = refl
+  subTmEq h tmRefl = refl
   subTmEq {sigma} {tau} h (tmEq A a) =
     cong₂ tmEq (subTyEq {sigma = sigma} {tau = tau} h A)
       (subTmEq {sigma = sigma} {tau = tau} h a)
@@ -397,7 +397,7 @@ mutual
   subTmId (tmPair a b) = cong₂ tmPair (subTmId a) (subTmId b)
   subTmId (tmElSigma d m) =
     cong₂ tmElSigma (subTmId d) (liftId2-subTm m ∙ subTmId m)
-  subTmId tmR = refl
+  subTmId tmRefl = refl
   subTmId (tmEq A a) = cong₂ tmEq (subTyId A) (subTmId a)
   subTmId (tmClass a) = cong tmClass (subTmId a)
   subTmId (tmElQtr l p) =
@@ -425,7 +425,7 @@ mutual
     cong₂ tmElSigma (subTmRen sigma rho d)
       (subTmRen (liftSubst (liftSubst sigma)) (raiseRen (raiseRen rho)) m
        ∙ liftComp2-subTm sigma rho m)
-  subTmRen sigma rho tmR = refl
+  subTmRen sigma rho tmRefl = refl
   subTmRen sigma rho (tmEq A a) =
     cong₂ tmEq (subTyRen sigma rho A) (subTmRen sigma rho a)
   subTmRen sigma rho (tmClass a) = cong tmClass (subTmRen sigma rho a)
@@ -523,7 +523,7 @@ mutual
     cong₂ tmElSigma (renTmComp rho tau d)
       (renTmComp (raiseRen (raiseRen rho)) (raiseRen (raiseRen tau)) m
        ∙ raiseCompRen2Tm rho tau m)
-  renTmComp rho tau tmR = refl
+  renTmComp rho tau tmRefl = refl
   renTmComp rho tau (tmEq A a) =
     cong₂ tmEq (renTyComp rho tau A) (renTmComp rho tau a)
   renTmComp rho tau (tmClass a) = cong tmClass (renTmComp rho tau a)
@@ -598,7 +598,7 @@ mutual
     cong₂ tmElSigma (renTmSub rho sigma d)
       (renTmSub (raiseRen (raiseRen rho)) (liftSubst (liftSubst sigma)) m
        ∙ sym (liftRenSub2Tm rho sigma m))
-  renTmSub rho sigma tmR = refl
+  renTmSub rho sigma tmRefl = refl
   renTmSub rho sigma (tmEq A a) =
     cong₂ tmEq (renTySub rho sigma A) (renTmSub rho sigma a)
   renTmSub rho sigma (tmClass a) = cong tmClass (renTmSub rho sigma a)
@@ -689,7 +689,7 @@ abstract
       cong₂ tmElSigma (subTmComp sigma tau d)
         (subTmComp (liftSubst (liftSubst sigma)) (liftSubst (liftSubst tau)) m
          ∙ liftCompSub2Tm sigma tau m)
-    subTmComp sigma tau tmR = refl
+    subTmComp sigma tau tmRefl = refl
     subTmComp sigma tau (tmEq A a) =
       cong₂ tmEq (subTyComp sigma tau A) (subTmComp sigma tau a)
     subTmComp sigma tau (tmClass a) = cong tmClass (subTmComp sigma tau a)

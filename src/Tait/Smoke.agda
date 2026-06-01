@@ -58,14 +58,14 @@ smoke = canonicalFormTheorem dElim
 smokeReduces : proj₁ (canonicalFormTheorem dElim) ≡ tmStar
 smokeReduces = refl
 
--- Eq-type non-vacuity: refl at Top has canonical representative `tmR`.
+-- Eq-type non-vacuity: refl at Top has canonical representative `tmRefl`.
 dEqTy : Derivable (isType [] (tyEq tyTop tmStar tmStar))
 dEqTy = fEq (fTop wfNil) (iTop wfNil) (iTop wfNil)
 
-dEqTerm : Derivable (hasTy [] tmR (tyEq tyTop tmStar tmStar))
+dEqTerm : Derivable (hasTy [] tmRefl (tyEq tyTop tmStar tmStar))
 dEqTerm = iEq (iTop wfNil)
 
-smokeEqReduces : proj₁ (canonicalFormTheorem dEqTerm) ≡ tmR
+smokeEqReduces : proj₁ (canonicalFormTheorem dEqTerm) ≡ tmRefl
 smokeEqReduces = refl
 
 -- Qtr-type non-vacuity: a closed quotient eliminator computes to `tmStar`.

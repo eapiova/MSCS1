@@ -51,7 +51,7 @@ canonicalTerm (compTmClosedSigma {a = a} {b = b} {A = A} {B = B} _ _ evG evt _ _
   tmPair a b , tySigma A B , (evt , evG)
 canonicalTerm (compTmClosedEq {t = t₀} {a = a₀} {b = b₀} {A = A₀} {G = G₀}
   _ _ evG evt _ _) =
-  tmR , tyEq A₀ a₀ b₀ , (evt , evG)
+  tmRefl , tyEq A₀ a₀ b₀ , (evt , evG)
 canonicalTerm (compTmClosedQtr {a = a} {A = A} _ _ evG evt _ _) =
   tmClass a , tyQtr A , (evt , evG)
 
@@ -66,6 +66,6 @@ canonicalTermEq (compTmEqClosedSigma {a = a} {b = b} {c = c} {d = d} {A = A} {B 
   tmPair a b , tmPair c d , tySigma A B , (evt , evu , evG)
 canonicalTermEq (compTmEqClosedEq {t = t₀} {u = u₀} {a = a₀} {b = b₀}
   {A = A₀} {G = G₀} _ _ _ evG evt evu _) =
-  tmR , tmR , tyEq A₀ a₀ b₀ , (evt , evu , evG)
+  tmRefl , tmRefl , tyEq A₀ a₀ b₀ , (evt , evu , evG)
 canonicalTermEq (compTmEqClosedQtr {a = a} {b = b} {A = A} _ _ _ evG evt evu _ _) =
   tmClass a , tmClass b , tyQtr A , (evt , evu , evG)

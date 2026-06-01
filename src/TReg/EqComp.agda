@@ -32,13 +32,13 @@ compFEqClosed compA compa compb =
 
 compIEqClosed : {n : ℕ} {A : RawType} {a : RawTerm}
   -> Computable n (hasTy [] a A)
-  -> Computable n (hasTy [] tmR (tyEq A a a))
+  -> Computable n (hasTy [] tmRefl (tyEq A a a))
 compIEqClosed compa =
   compTmClosedEq
     (iEq (compToDerivable compa))
     (compFEqClosed (compTmToCompTy compa) compa compa)
     evalEq
-    evalR
+    evalRefl
     (reflTm (iEq (compToDerivable compa)))
     (compReflTmClosed compa)
 
@@ -51,7 +51,7 @@ compEEqClosed {A = A} {a = a} {b = b}
 
 compCEqClosed : {n : ℕ} {A : RawType} {a b p : RawTerm}
   -> Computable n (hasTy [] p (tyEq A a b))
-  -> Computable n (termEq [] p tmR (tyEq A a b))
+  -> Computable n (termEq [] p tmRefl (tyEq A a b))
 compCEqClosed {A = A} {a = a} {b = b}
   compp@(compTmClosedEq dp compEqTy (evalEq {A = A} {a = a} {b = b}) evp _ compab) =
   compTmEqClosedEq
@@ -60,7 +60,7 @@ compCEqClosed {A = A} {a = a} {b = b}
     compEqRefl
     evalEq
     evp
-    evalR
+    evalRefl
     compab
   where
   compa : Computable _ (hasTy [] a A)
@@ -78,15 +78,15 @@ compCEqClosed {A = A} {a = a} {b = b}
   dEqTy : Derivable (typeEq [] (tyEq A a a) (tyEq A a b))
   dEqTy = fEqEq (reflTy dA) (reflTm da) (compToDerivable compab)
 
-  dEqRefl : Derivable (hasTy [] tmR (tyEq A a b))
+  dEqRefl : Derivable (hasTy [] tmRefl (tyEq A a b))
   dEqRefl = conv (iEq da) dEqTy
 
-  compEqRefl : Computable _ (hasTy [] tmR (tyEq A a b))
+  compEqRefl : Computable _ (hasTy [] tmRefl (tyEq A a b))
   compEqRefl =
     compTmClosedEq
       dEqRefl
       compEqTy
       evalEq
-      evalR
+      evalRefl
       (cEq dEqRefl dA da db)
       compab

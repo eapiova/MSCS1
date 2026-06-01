@@ -59,7 +59,7 @@ mutual
       × ComputableTyEqAcc (subTy (singleSubst a) B) (subTy (singleSubst c) B)
           (rs (subTy-snd< A B a)) (rs (subTy-snd< A B c))
   ComputableTmEqAcc (tyEq A a b) (acc rs) t u =
-      (t =>e tmR) × (u =>e tmR)
+      (t =>e tmRefl) × (u =>e tmRefl)
     × ComputableTmEqAcc A (rs (tyDepth-base<Eq A a b)) a b
   ComputableTmEqAcc (tyQtr A) (acc rs) t u =
     Σ[ p ∈ RawTerm ] Σ[ q ∈ RawTerm ]
@@ -185,7 +185,7 @@ ComputableTmAcc (tySigma A B) (acc rs) t =
     × ComputableTmAcc A (rs (tyDepth-fst<Sigma A B)) a
     × ComputableTmAcc (subTy (singleSubst a) B) (rs (subTy-snd< A B a)) b
 ComputableTmAcc (tyEq A a b) (acc rs) t =
-  (t =>e tmR) × ComputableTmEqAcc A (rs (tyDepth-base<Eq A a b)) a b
+  (t =>e tmRefl) × ComputableTmEqAcc A (rs (tyDepth-base<Eq A a b)) a b
 ComputableTmAcc (tyQtr A) (acc rs) t =
   Σ[ p ∈ RawTerm ] (t =>e tmClass p) × ComputableTmAcc A (rs (tyDepth-base<Qtr A)) p
 
@@ -331,25 +331,25 @@ computableQtr-intro {A} {t} q =
 -- ── Eq intro / elim ───────────────────────────────────────────────
 
 eqAcc-elim : (A : RawType) (a b : RawTerm) (p : Acc _<_ (tyDepth (tyEq A a b))) (t : RawTerm)
-  -> ComputableTmAcc (tyEq A a b) p t -> (t =>e tmR) × ComputableTmEq A a b
+  -> ComputableTmAcc (tyEq A a b) p t -> (t =>e tmRefl) × ComputableTmEq A a b
 eqAcc-elim A a b (acc rs) t (ev , cEq) =
   ev ,
   ComputableTmEqAcc-cast A
     (rs (tyDepth-base<Eq A a b)) (<-wf (tyDepth A)) a b cEq
 
 eqAcc-intro : (A : RawType) (a b : RawTerm) (p : Acc _<_ (tyDepth (tyEq A a b))) (t : RawTerm)
-  -> (t =>e tmR) × ComputableTmEq A a b -> ComputableTmAcc (tyEq A a b) p t
+  -> (t =>e tmRefl) × ComputableTmEq A a b -> ComputableTmAcc (tyEq A a b) p t
 eqAcc-intro A a b (acc rs) t (ev , cEq) =
   ev ,
   ComputableTmEqAcc-cast A
     (<-wf (tyDepth A)) (rs (tyDepth-base<Eq A a b)) a b cEq
 
 computableEq-elim : {A : RawType} {a b t : RawTerm}
-  -> Computable (tyEq A a b) t -> (t =>e tmR) × ComputableTmEq A a b
+  -> Computable (tyEq A a b) t -> (t =>e tmRefl) × ComputableTmEq A a b
 computableEq-elim {A} {a} {b} {t} c =
   eqAcc-elim A a b (<-wf (tyDepth (tyEq A a b))) t c
 
 computableEq-intro : {A : RawType} {a b t : RawTerm}
-  -> (t =>e tmR) × ComputableTmEq A a b -> Computable (tyEq A a b) t
+  -> (t =>e tmRefl) × ComputableTmEq A a b -> Computable (tyEq A a b) t
 computableEq-intro {A} {a} {b} {t} c =
   eqAcc-intro A a b (<-wf (tyDepth (tyEq A a b))) t c

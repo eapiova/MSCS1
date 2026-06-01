@@ -308,8 +308,8 @@ record ClosedEqTmInv (n : ℕ) (t : RawTerm) (A : RawType) (a b : RawTerm) : Typ
   field
     eqTmDeriv : Derivable (hasTy [] t (tyEq A a b))
     eqTmCompTy : Computable n (isType [] (tyEq A a b))
-    eqTmEvalRhs : t =>e tmR
-    eqTmCorrRhs : Derivable (termEq [] t tmR (tyEq A a b))
+    eqTmEvalRhs : t =>e tmRefl
+    eqTmCorrRhs : Derivable (termEq [] t tmRefl (tyEq A a b))
     eqTmCompInner : Computable n (termEq [] a b A)
 
 record ClosedEqTyInv (n : ℕ) (G A : RawType) (a b : RawTerm) : Type where
@@ -325,8 +325,8 @@ record ClosedEqTmEqInv (n : ℕ) (t u : RawTerm) (A : RawType) (a b : RawTerm) :
     eqTmEqDeriv : Derivable (termEq [] t u (tyEq A a b))
     eqTmEqCompLeft : Computable n (hasTy [] t (tyEq A a b))
     eqTmEqCompRight : Computable n (hasTy [] u (tyEq A a b))
-    eqTmEqEvalLeftR : t =>e tmR
-    eqTmEqEvalRightR : u =>e tmR
+    eqTmEqEvalLeftR : t =>e tmRefl
+    eqTmEqEvalRightR : u =>e tmRefl
     eqTmEqCompInner : Computable n (termEq [] a b A)
 
 record ClosedQtrTmInv (n : ℕ) (t : RawTerm) (A : RawType) : Type where

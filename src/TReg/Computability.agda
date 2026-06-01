@@ -127,8 +127,8 @@ data Computable (n : ℕ) : JForm -> Type where
     -> Derivable (hasTy [] t G)
     -> Computable n (isType [] G)
     -> G =>t tyEq A a b
-    -> t =>e tmR
-    -> Derivable (termEq [] t tmR G)
+    -> t =>e tmRefl
+    -> Derivable (termEq [] t tmRefl G)
     -> Computable n (termEq [] a b A)
     -> Computable n (hasTy [] t G)
 
@@ -166,8 +166,8 @@ data Computable (n : ℕ) : JForm -> Type where
     -> Computable n (hasTy [] t G)
     -> Computable n (hasTy [] u G)
     -> G =>t tyEq A a b
-    -> t =>e tmR
-    -> u =>e tmR
+    -> t =>e tmRefl
+    -> u =>e tmRefl
     -> Computable n (termEq [] a b A)
     -> Computable n (termEq [] t u G)
 

@@ -46,7 +46,7 @@ mutual
   ScopedTm n tmStar = Unit
   ScopedTm n (tmPair a b) = ScopedTm n a × ScopedTm n b
   ScopedTm n (tmElSigma d m) = ScopedTm n d × ScopedTm (suc (suc n)) m
-  ScopedTm n tmR = Unit
+  ScopedTm n tmRefl = Unit
   ScopedTm n (tmEq A a) = ScopedTy n A × ScopedTm n a
   ScopedTm n (tmClass a) = ScopedTm n a
   ScopedTm n (tmElQtr l p) = ScopedTm (suc n) l × ScopedTm n p
@@ -112,7 +112,7 @@ mutual
     scopedRenTm {rho = rho} maps d scd ,
     scopedRenTm {rho = raiseRen (raiseRen rho)}
       (raiseRenMaps {rho = raiseRen rho} (raiseRenMaps {rho = rho} maps)) m scm
-  scopedRenTm {rho = rho} maps tmR _ = tt
+  scopedRenTm {rho = rho} maps tmRefl _ = tt
   scopedRenTm {rho = rho} maps (tmEq A a) (scA , sca) =
     scopedRenTy {rho = rho} maps A scA ,
     scopedRenTm {rho = rho} maps a sca
@@ -165,7 +165,7 @@ mutual
     scopedSubTm {sigma = liftSubst (liftSubst sigma)}
       (liftSubstMaps {sigma = liftSubst sigma}
         (liftSubstMaps {sigma = sigma} maps)) m scm
-  scopedSubTm {sigma = sigma} maps tmR _ = tt
+  scopedSubTm {sigma = sigma} maps tmRefl _ = tt
   scopedSubTm {sigma = sigma} maps (tmEq A a) (scA , sca) =
     scopedSubTy {sigma = sigma} maps A scA ,
     scopedSubTm {sigma = sigma} maps a sca
@@ -213,7 +213,7 @@ mutual
       (scopedSubTmId {sigma = liftSubst (liftSubst sigma)}
         (liftSubstKeeps {sigma = liftSubst sigma}
           (liftSubstKeeps {sigma = sigma} keep)) m scm)
-  scopedSubTmId {sigma = sigma} keep tmR _ = refl
+  scopedSubTmId {sigma = sigma} keep tmRefl _ = refl
   scopedSubTmId {sigma = sigma} keep (tmEq A a) (scA , sca) =
     cong₂ tmEq
       (scopedSubTyId {sigma = sigma} keep A scA)

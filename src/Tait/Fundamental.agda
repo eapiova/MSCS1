@@ -396,7 +396,7 @@ computableResult {A = tySigma A B} ct =
   tmPair a b , ev , computableSigma-intro (a , b , evalPair , ca , cb)
 computableResult {A = tyEq A a b} ct =
   let ev , eqab = computableEq-elim ct in
-  tmR , ev , computableEq-intro (evalR , eqab)
+  tmRefl , ev , computableEq-intro (evalRefl , eqab)
 computableResult {A = tyQtr A} ct =
   let a , ev , ca = computableQtr-elim ct in
   tmClass a , ev , computableQtr-intro (a , evalClass , ca)
@@ -708,8 +708,8 @@ computableTyEqQtr-elim {A} {C} =
 
 computableTmEqEqForm-introAcc : {A : RawType} {a b t u : RawTerm}
   -> (p : Acc _<_ (tyDepth (tyEq A a b)))
-  -> t =>e tmR
-  -> u =>e tmR
+  -> t =>e tmRefl
+  -> u =>e tmRefl
   -> ComputableTmEq A a b
   -> ComputableTmEqAcc (tyEq A a b) p t u
 computableTmEqEqForm-introAcc {A} {a} {b} (acc rs) evt evu eqab =
@@ -718,8 +718,8 @@ computableTmEqEqForm-introAcc {A} {a} {b} (acc rs) evt evu eqab =
     (<-wf (tyDepth A)) (rs (tyDepth-base<Eq A a b)) a b eqab
 
 computableTmEqEqForm-intro : {A : RawType} {a b t u : RawTerm}
-  -> t =>e tmR
-  -> u =>e tmR
+  -> t =>e tmRefl
+  -> u =>e tmRefl
   -> ComputableTmEq A a b
   -> ComputableTmEq (tyEq A a b) t u
 computableTmEqEqForm-intro {A} {a} {b} =
@@ -727,7 +727,7 @@ computableTmEqEqForm-intro {A} {a} {b} =
 
 EqFormComputableTmEq : RawType -> RawTerm -> RawTerm -> RawTerm -> RawTerm -> Type
 EqFormComputableTmEq A a b t u =
-  (t =>e tmR) × (u =>e tmR) × ComputableTmEq A a b
+  (t =>e tmRefl) × (u =>e tmRefl) × ComputableTmEq A a b
 
 computableTmEqEqForm-elimAcc : (A : RawType) (a b : RawTerm)
   -> (p : Acc _<_ (tyDepth (tyEq A a b))) (t u : RawTerm)
@@ -1381,8 +1381,8 @@ mutual
     in
     computableTmEqEqForm-intro
       {A = subTy sigma A} {a = subTm sigma a} {b = subTm sigma a}
-      {t = tmR} {u = tmR}
-      evalR evalR (compTmEq-refl {A = subTy sigma A} ctyA ca) ,
+      {t = tmRefl} {u = tmRefl}
+      evalRefl evalRefl (compTmEq-refl {A = subTy sigma A} ctyA ca) ,
     computableTyEqEqForm-intro
       {A = subTy sigma A} {C = subTy tau A}
       {a = subTm sigma a} {b = subTm sigma a}
@@ -1904,8 +1904,8 @@ mutual
     in
     computableTmEqEqForm-intro
       {A = subTy sigma A} {a = subTm sigma a} {b = subTm sigma a}
-      {t = tmR} {u = tmR}
-      evalR evalR (compTmEq-refl {A = subTy sigma A} ctyA ca) ,
+      {t = tmRefl} {u = tmRefl}
+      evalRefl evalRefl (compTmEq-refl {A = subTy sigma A} ctyA ca) ,
     computableTyEqEqForm-intro
       {A = subTy sigma A} {C = subTy tau A}
       {a = subTm sigma a} {b = subTm sigma a}
@@ -1965,8 +1965,8 @@ mutual
     in
     computableTmEqEqForm-intro
       {A = subTy sigma A} {a = subTm sigma a} {b = subTm sigma b}
-      {t = subTm sigma p} {u = tmR}
-      evp evalR eqab ,
+      {t = subTm sigma p} {u = tmRefl}
+      evp evalRefl eqab ,
     computableTyEqEqForm-intro
       {A = subTy sigma A} {C = subTy tau A}
       {a = subTm sigma a} {b = subTm sigma b}

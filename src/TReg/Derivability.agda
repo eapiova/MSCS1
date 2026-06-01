@@ -34,6 +34,8 @@ qtrSecondBranchRen : Ren
 qtrSecondBranchRen = keep0RenBy 1
 
 mutual
+  -- Rule constructors follow Maietti's rule families:
+  -- f = formation, i = introduction, e = elimination, c = computation.
   data Derivable : JForm -> Type where
     varStar : {gamma delta : Ctx} {A : RawType}
       -> CtxWF (delta ++ (A ∷ gamma))
@@ -216,11 +218,11 @@ mutual
 
     iEq : {gamma : Ctx} {A : RawType} {a : RawTerm}
       -> Derivable (hasTy gamma a A)
-      -> Derivable (hasTy gamma tmR (tyEq A a a))
+      -> Derivable (hasTy gamma tmRefl (tyEq A a a))
 
     iEqEq : {gamma : Ctx} {A : RawType} {a b : RawTerm}
       -> Derivable (termEq gamma a b A)
-      -> Derivable (termEq gamma tmR tmR (tyEq A a a))
+      -> Derivable (termEq gamma tmRefl tmRefl (tyEq A a a))
 
     eEqStar : {gamma : Ctx} {A : RawType} {a b p : RawTerm}
       -> Derivable (hasTy gamma p (tyEq A a b))
@@ -234,7 +236,7 @@ mutual
       -> Derivable (isType gamma A)
       -> Derivable (hasTy gamma a A)
       -> Derivable (hasTy gamma b A)
-      -> Derivable (termEq gamma p tmR (tyEq A a b))
+      -> Derivable (termEq gamma p tmRefl (tyEq A a b))
 
     fQtr : {gamma : Ctx} {A : RawType}
       -> Derivable (isType gamma A)

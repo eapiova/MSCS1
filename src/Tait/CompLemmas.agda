@@ -19,7 +19,7 @@ open import Tait.Computable
 evalResultValue : {t g : RawTerm} -> t =>e g -> g =>e g
 evalResultValue evalStar = evalStar
 evalResultValue evalPair = evalPair
-evalResultValue evalR = evalR
+evalResultValue evalRefl = evalRefl
 evalResultValue evalEqTm = evalEqTm
 evalResultValue evalClass = evalClass
 evalResultValue (evalElSigma evd evm) = evalResultValue evm

@@ -66,7 +66,7 @@ canonicalTermEq {A = tySigma A B} d =
   tmPair a b , tmPair c e , tySigma A B , evt , evu , evalSigma
 canonicalTermEq {A = tyEq A a b} d =
   let evt , evu , eqab = computableTmEqEqForm-elim (fundTmEqClosed d) in
-  tmR , tmR , tyEq A a b , evt , evu , evalEq
+  tmRefl , tmRefl , tyEq A a b , evt , evu , evalEq
 canonicalTermEq {A = tyQtr A} d =
   let p , q , evt , evu , epp , eqq = computableTmEqQtr-elim (fundTmEqClosed d) in
   tmClass p , tmClass q , tyQtr A , evt , evu , evalQtr

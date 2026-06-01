@@ -1,12 +1,12 @@
 {-# OPTIONS --safe #-}
 
 -- Tait-style rebuild (Phase K/L). Full theory: Top, Sigma, Eq, Qtr.
--- Verbatim fork of TReg.Context.
+-- Shared context and judgement-form declarations.
 
 module Tait.Context where
 
 open import Tait.Prelude
-open import Data.List.Base using (List ; [] ; _∷_ ; _++_ ; length)
+open import Data.List.Base using (List)
 
 open import Tait.Syntax
 
@@ -24,10 +24,3 @@ ctxOf (isType gamma _)   = gamma
 ctxOf (typeEq gamma _ _) = gamma
 ctxOf (hasTy gamma _ _)  = gamma
 ctxOf (termEq gamma _ _ _) = gamma
-
-data CtxWFBy (IsType : Ctx -> RawType -> Type) : Ctx -> Type where
-  wfNil : CtxWFBy IsType []
-  wfCons : {gamma : Ctx} {A : RawType}
-    -> CtxWFBy IsType gamma
-    -> IsType gamma A
-    -> CtxWFBy IsType (A ∷ gamma)

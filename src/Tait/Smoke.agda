@@ -9,15 +9,21 @@
 module Tait.Smoke where
 
 open import Tait.Prelude
+open import Data.Empty using (⊥)
 open import Data.List.Base using ([] ; _∷_)
-open import Data.Product using (Σ-syntax ; _×_ ; _,_ ; proj₁)
+open import Data.Product using (Σ-syntax ; _×_ ; _,_ ; proj₁ ; proj₂)
+open import Data.Unit using (tt)
 
 open import Tait.Syntax
 open import Tait.Context
 open import Tait.Substitution
 open import Tait.Evaluation
 open import Tait.Derivability
+open import Tait.Minimal
 open import Tait.CanonicalForm
+open import Tait.FullCanonicalForm
+open import Tait.Corollaries
+open import Tait.Inversion using (IsJust ; invQtrHead? ; invMinimalQtrHead?)
 
 wf1 : CtxWF (tyTop ∷ [])
 wf1 = wfCons wfNil (fTop wfNil)
@@ -58,6 +64,55 @@ smoke = canonicalFormTheorem dElim
 smokeReduces : proj₁ (canonicalFormTheorem dElim) ≡ tmStar
 smokeReduces = refl
 
+smokeEvaluationTerm : proj₁ (evaluationTerm dElim) ≡ tmStar
+smokeEvaluationTerm = refl
+
+fullSmokeSigmaElim : FullCanonicalForm
+  (hasTy [] (tmElSigma (tmPair tmStar tmStar) tmStar)
+            (subTy (singleSubst (tmPair tmStar tmStar)) tyTop))
+fullSmokeSigmaElim = fullCanonicalFormTheorem dElim
+
+fullSmokeSigmaReduces : proj₁ fullSmokeSigmaElim ≡ tmStar
+fullSmokeSigmaReduces = refl
+
+dPairEq : Derivable
+  (termEq [] (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop))
+dPairEq = reflTm dPair
+
+fullSmokeSigmaPairEq : FullCanonicalForm
+  (termEq [] (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop))
+fullSmokeSigmaPairEq = fullCanonicalFormTheorem dPairEq
+
+fullSmokeSigmaPairEqCanonical :
+  CanonicalTmEq (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop)
+fullSmokeSigmaPairEqCanonical =
+  proj₁ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ fullSmokeSigmaPairEq))))))
+
+sigmaPairEqFst :
+  CanonicalTmEq (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop)
+  -> Derivable (termEq [] tmStar tmStar tyTop)
+sigmaPairEqFst (canPairTmEq dac _ _ _) = dac
+
+sigmaPairEqSnd :
+  CanonicalTmEq (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop)
+  -> Derivable (termEq [] tmStar tmStar (subTy (singleSubst tmStar) tyTop))
+sigmaPairEqSnd (canPairTmEq _ dbd _ _) = dbd
+
+fullSmokeSigmaPairEqFst : Derivable (termEq [] tmStar tmStar tyTop)
+fullSmokeSigmaPairEqFst =
+  sigmaPairEqFst fullSmokeSigmaPairEqCanonical
+
+fullSmokeSigmaPairEqSnd :
+  Derivable (termEq [] tmStar tmStar (subTy (singleSubst tmStar) tyTop))
+fullSmokeSigmaPairEqSnd =
+  sigmaPairEqSnd fullSmokeSigmaPairEqCanonical
+
+smokeSigmaExistentialFst : proj₁ (sigmaExistential dPair) ≡ tmStar
+smokeSigmaExistentialFst = refl
+
+smokeSigmaExistentialSnd : proj₁ (proj₂ (sigmaExistential dPair)) ≡ tmStar
+smokeSigmaExistentialSnd = refl
+
 -- Eq-type non-vacuity: refl at Top has canonical representative `tmRefl`.
 dEqTy : Derivable (isType [] (tyEq tyTop tmStar tmStar))
 dEqTy = fEq (fTop wfNil) (iTop wfNil) (iTop wfNil)
@@ -67,6 +122,13 @@ dEqTerm = iEq (iTop wfNil)
 
 smokeEqReduces : proj₁ (canonicalFormTheorem dEqTerm) ≡ tmRefl
 smokeEqReduces = refl
+
+fullSmokeEqTerm : FullCanonicalForm
+  (hasTy [] tmRefl (tyEq tyTop tmStar tmStar))
+fullSmokeEqTerm = fullCanonicalFormTheorem dEqTerm
+
+fullSmokeEqReduces : proj₁ fullSmokeEqTerm ≡ tmRefl
+fullSmokeEqReduces = refl
 
 -- Qtr-type non-vacuity: a closed quotient eliminator computes to `tmStar`.
 dQtrTy : Derivable (isType [] (tyQtr tyTop))
@@ -98,3 +160,81 @@ dQtrElim = eQtr dQtrMotive dQtrClass dQtrBranchTy dQtrBranch dQtrCoh
 
 smokeQtrReduces : proj₁ (canonicalFormTheorem dQtrElim) ≡ tmStar
 smokeQtrReduces = refl
+
+fullSmokeQtrElim : FullCanonicalForm
+  (hasTy [] (tmElQtr tmStar (tmClass tmStar))
+    (subTy (singleSubst (tmClass tmStar)) tyTop))
+fullSmokeQtrElim = fullCanonicalFormTheorem dQtrElim
+
+fullSmokeQtrReduces : proj₁ fullSmokeQtrElim ≡ tmStar
+fullSmokeQtrReduces = refl
+
+fullSmokeQtrClass : FullCanonicalForm
+  (hasTy [] (tmClass tmStar) (tyQtr tyTop))
+fullSmokeQtrClass = fullCanonicalFormTheorem dQtrClass
+
+fullSmokeQtrClassReduces : proj₁ fullSmokeQtrClass ≡ tmClass tmStar
+fullSmokeQtrClassReduces = refl
+
+fullSmokeQtrClassCanonical : CanonicalTm (tmClass tmStar) (tyQtr tyTop)
+fullSmokeQtrClassCanonical = canClassTm (iTop wfNil)
+
+fullSmokeQtrClassDerivable : Derivable (hasTy [] (tmClass tmStar) (tyQtr tyTop))
+fullSmokeQtrClassDerivable = canonicalTmDerivable fullSmokeQtrClassCanonical
+
+qtrClassRepresentativeTy :
+  CanonicalTm (tmClass tmStar) (tyQtr tyTop)
+  -> Derivable (hasTy [] tmStar tyTop)
+qtrClassRepresentativeTy (canClassTm da) = da
+
+fullSmokeQtrClassRepresentativeTy : Derivable (hasTy [] tmStar tyTop)
+fullSmokeQtrClassRepresentativeTy =
+  qtrClassRepresentativeTy
+    (proj₁ (proj₂ (proj₂ (proj₂ (proj₂ fullSmokeQtrClass)))))
+
+smokeTregConsistent :
+  Derivable (typeEq [] tyTop (tySigma tyTop tyTop))
+  -> ⊥
+smokeTregConsistent = tregConsistent
+
+smokeQtrHeadInversion : IsJust (invQtrHead? dQtrElim)
+smokeQtrHeadInversion = tt
+
+minWf1 : MinCtxWF (tyTop ∷ [])
+minWf1 = minWfCons minWfNil (minFTop minWfNil)
+
+minWf2 : MinCtxWF (tyTop ∷ tyTop ∷ [])
+minWf2 = minWfCons minWf1 (minFTop minWf1)
+
+minQtrTy : Minimal (isType [] (tyQtr tyTop))
+minQtrTy = minFQtr (minFTop minWfNil)
+
+minQtrClass : Minimal (hasTy [] (tmClass tmStar) (tyQtr tyTop))
+minQtrClass = minIQtr (minITop minWfNil)
+
+minQtrMotive : Minimal (isType (tyQtr tyTop ∷ []) tyTop)
+minQtrMotive = minFTop (minWfCons minWfNil minQtrTy)
+
+minQtrBranchTy : Minimal (isType (tyTop ∷ []) (qtrBranchTy tyTop))
+minQtrBranchTy = minFTop minWf1
+
+minQtrBranch : Minimal (hasTy (tyTop ∷ []) tmStar (qtrBranchTy tyTop))
+minQtrBranch = minITop minWf1
+
+minQtrCoh : Minimal
+  (termEq (wkTyBy 1 tyTop ∷ tyTop ∷ [])
+    (wkTmBy 1 tmStar)
+    (renTm qtrSecondBranchRen tmStar)
+    (qtrCohTy tyTop))
+minQtrCoh = minCTop (minITop minWf2)
+
+minQtrElim : Minimal
+  (hasTy [] (tmElQtr tmStar (tmClass tmStar))
+    (subTy (singleSubst (tmClass tmStar)) tyTop))
+minQtrElim =
+  minEQtr minQtrMotive minQtrClass (minFTop minWfNil) minQtrBranchTy minQtrBranch
+    (minFTop minWf1) minQtrCoh
+    (minFTop minWfNil)
+
+smokeMinimalQtrHeadInversion : IsJust (invMinimalQtrHead? minQtrElim)
+smokeMinimalQtrHeadInversion = tt

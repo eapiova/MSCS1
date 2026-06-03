@@ -22,7 +22,7 @@ This repository contains **two** formalisations of the same theorem.
 Together they tell the story of the proof's *formalisation
 architecture* — itself a contribution of this work.
 
-### `src/Tait/` — the complete result
+### `src/Recursive/` — the complete result
 
 A Tait-style logical-relations proof. The computability predicate is a
 recursive **function on type structure**; the fundamental theorem
@@ -32,11 +32,11 @@ recurses on syntactic size. This development is:
 - **zero `{-# TERMINATING #-}` pragmas, zero `postulate`, zero holes**;
 - the headline theorem `canonicalFormTheorem : Derivable J →
   CanonicalForm J` is machine-checked for all four type formers;
-- non-vacuity is `refl`-verified in `src/Tait/Smoke.agda` — the
+- non-vacuity is `refl`-verified in `src/Recursive/Smoke.agda` — the
   theorem genuinely normalises concrete `Σ`-, `Eq`- and
   quotient-eliminators to their canonical forms.
 
-### `src/TReg/` — the direct attempt
+### `src/Inductive/` — the direct attempt
 
 An earlier formalisation in which `Computable` is an inductive data
 type and "substitution preserves computability" is proven by recursion
@@ -45,9 +45,9 @@ runs into the standard logical-relations / reducibility circularity:
 no fixed lexicographic measure satisfies both the `Σ`-family
 substitution edge and the `Σ`-elimination edge. It type-checks with
 **two** narrow `{-# TERMINATING #-}` pragmas in
-`src/TReg/CompTheorem.agda` (18 of its 21 modules are `--safe`).
+`src/Inductive/CompTheorem.agda` (18 of its 21 modules are `--safe`).
 
-`src/Tait/` is the resolution of what `src/TReg/` left open: rebuilding
+`src/Recursive/` is the resolution of what `src/Inductive/` left open: rebuilding
 the semantic relation so it recurses on type structure dissolves the
 cycle, and the proof becomes genuinely, fully `--safe`.
 
@@ -61,13 +61,13 @@ cycle, and the proof becomes genuinely, fully `--safe`.
 
 ```sh
 # the complete, fully --safe development:
-agda --safe src/Tait/Everything.agda
+agda --safe src/Recursive/Everything.agda
 
 # the earlier direct attempt (2 TERMINATING pragmas, not fully --safe):
-agda src/TReg/Everything.agda
+agda src/Inductive/Everything.agda
 ```
 
-`src/Tait/Everything.agda` checks from a cold build in seconds.
+`src/Recursive/Everything.agda` checks from a cold build in seconds.
 
 ## Relation to the thesis
 

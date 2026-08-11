@@ -110,3 +110,24 @@ numeralDistinct :
   -> ⊥
 numeralDistinct m n neq d =
   canonicalNatEqDistinct m n neq (fundTmEqClosed d)
+
+-- ── Numerical consistency ─────────────────────────────────────────
+--
+-- A false numeric equation has no closed proof.  The content is
+-- numeralDistinct; equality reflection (eEqStar) only repackages it as
+-- uninhabitability of the corresponding Eq type.
+--
+-- This is the statement the calculus can actually make.  The same shape
+-- at Top is empty: Eq Top tt u is well formed only for u : Top, and the
+-- Top reflection rule then forces u == tt, so no instance satisfies a
+-- side condition asking u and tt to differ.
+
+noEqProofDistinctNumerals :
+  (m n : ℕ)
+  -> ¬ (m ≡ n)
+  -> {p : RawTerm}
+  -> Derivable (hasTy [] p (tyEq tyNat (numeral m) (numeral n)))
+  -> ⊥
+noEqProofDistinctNumerals m n neq d =
+  numeralDistinct m n neq
+    (eEqStar d (fNat wfNil) (numeralTy m) (numeralTy n))

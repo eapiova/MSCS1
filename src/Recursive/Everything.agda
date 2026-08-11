@@ -19,6 +19,7 @@ open import Recursive.Minimal
 open import Recursive.Inversion
 open import Recursive.EvalSound
 open import Recursive.Corollaries
+open import Recursive.Numerals
 open import Recursive.Smoke
 open import Recursive.Contractibility
 open import Recursive.RulesAlaMSCS

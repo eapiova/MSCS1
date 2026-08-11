@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this formalisation, please cite it as below."
+title: "A canonical normal form theorem for the type theory of regular categories in Agda"
+abstract: >-
+  Two complete Agda formalisations of the canonical normal form theorem for
+  T_reg, the type theory of regular categories in Maietti's modular
+  correspondence: a Tait-style logical-relations proof in which the
+  computability predicate is a recursive function on type structure
+  (src/Recursive/, 16 modules, all --safe, no postulates, no TERMINATING
+  pragmas, no holes), and an inductive-family encoding of the same predicate
+  that documents where that approach breaks down (src/Inductive/).
+type: software
+authors:
+  - family-names: Borsetto
+    given-names: Riccardo
+    affiliation: "Università di Verona"
+license: MIT
+repository-code: "https://github.com/eapiova/MSCS1"
+keywords:
+  - Agda
+  - dependent type theory
+  - logical relations
+  - canonical form
+  - regular categories
+  - quotient types
+  - formalisation
+version: "1.0.0"
+date-released: "2026-07-16"

@@ -1,0 +1,21 @@
+{
+  "title": "A canonical normal form theorem for the type theory of regular categories in Agda",
+  "description": "<p>Two complete Agda formalisations of the canonical normal form theorem for <em>T_reg</em>, the type theory of regular categories in Maietti's modular correspondence between extensions of dependent type theory and classes of categories.</p><p><strong>src/Recursive/</strong> is the complete result: a Tait-style logical-relations proof whose computability predicate is a recursive function on type structure, with the fundamental theorem recursing on syntactic size. 16 modules, every one <code>--safe</code>; zero <code>TERMINATING</code> pragmas, zero postulates, zero holes; non-vacuity <code>refl</code>-verified in <code>src/Recursive/Smoke.agda</code>.</p><p><strong>src/Inductive/</strong> is the direct attempt, encoding the same predicate as an inductive family, kept side by side because the contrast is itself a contribution: it isolates where the reducibility cycle becomes unbreakable.</p><p>Checked with Agda 2.9.0 and agda-stdlib 2.3 under <code>--without-K</code>.</p>",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Borsetto, Riccardo",
+      "affiliation": "Università di Verona"
+    }
+  ],
+  "keywords": [
+    "Agda",
+    "dependent type theory",
+    "logical relations",
+    "canonical form",
+    "regular categories",
+    "quotient types",
+    "formalisation"
+  ]
+}

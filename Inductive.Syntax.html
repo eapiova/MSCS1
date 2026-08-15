@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="utf-8"><title>Inductive.Syntax</title><link rel="stylesheet" href="Agda.css"></head><body><pre class="Agda"><a id="1" class="Symbol">{-#</a> <a id="5" class="Keyword">OPTIONS</a> <a id="13" class="Pragma">--safe</a> <a id="20" class="Symbol">#-}</a>
+
+<a id="25" class="Keyword">module</a> <a id="32" href="Inductive.Syntax.html" class="Module">Inductive.Syntax</a> <a id="49" class="Keyword">where</a>
+
+<a id="56" class="Keyword">open</a> <a id="61" class="Keyword">import</a> <a id="68" href="Inductive.Prelude.html" class="Module">Inductive.Prelude</a>
+<a id="86" class="Keyword">open</a> <a id="91" class="Keyword">import</a> <a id="98" href="Data.Nat.html" class="Module">Data.Nat</a> <a id="107" class="Keyword">using</a> <a id="113" class="Symbol">(</a><a id="114" href="Data.Nat.Base.html#1069" class="Datatype">ℕ</a> <a id="116" class="Symbol">;</a> <a id="118" href="Agda.Builtin.Nat.html#221" class="InductiveConstructor">zero</a> <a id="123" class="Symbol">;</a> <a id="125" href="Agda.Builtin.Nat.html#234" class="InductiveConstructor">suc</a><a id="128" class="Symbol">)</a>
+
+<a id="131" class="Comment">-- Object-language syntax for the regular fragment of Maietti&#39;s calculus.</a>
+<a id="205" class="Comment">-- The constructor prefixes keep object syntax distinct from Agda syntax:</a>
+<a id="279" class="Comment">--</a>
+<a id="282" class="Comment">--   Maietti notation    Agda constructor</a>
+<a id="324" class="Comment">--   ⊤                   tyTop</a>
+<a id="355" class="Comment">--   Σx∈A B(x)           tySigma A B</a>
+<a id="392" class="Comment">--   Eq(A , a , b)       tyEq A a b</a>
+<a id="428" class="Comment">--   A/⊤                 tyQtr A</a>
+<a id="461" class="Comment">--   x                   var n</a>
+<a id="492" class="Comment">--   ⋆                   tmStar</a>
+<a id="524" class="Comment">--   ⟨a , b⟩             tmPair a b</a>
+<a id="560" class="Comment">--   El Σ(d , m)         tmElSigma d m</a>
+<a id="599" class="Comment">--   eq_A(a)             tmRefl</a>
+<a id="631" class="Comment">--   [a]                 tmClass a</a>
+<a id="666" class="Comment">--   El Q(l , p)         tmElQtr l p</a>
+<a id="703" class="Comment">--</a>
+<a id="706" class="Comment">-- Binders are represented by de Bruijn indices; for example, the B in</a>
+<a id="777" class="Comment">-- tySigma A B is a raw type in the context extended by A.</a>
+<a id="836" class="Keyword">mutual</a>
+  <a id="845" class="Keyword">data</a> <a id="RawType"></a><a id="850" href="Inductive.Syntax.html#850" class="Datatype">RawType</a> <a id="858" class="Symbol">:</a> <a id="860" href="Inductive.Prelude.html#173" class="Function">Type</a> <a id="865" class="Keyword">where</a>
+    <a id="RawType.tyTop"></a><a id="875" href="Inductive.Syntax.html#875" class="InductiveConstructor">tyTop</a> <a id="881" class="Symbol">:</a> <a id="883" href="Inductive.Syntax.html#850" class="Datatype">RawType</a>
+    <a id="RawType.tySigma"></a><a id="895" href="Inductive.Syntax.html#895" class="InductiveConstructor">tySigma</a> <a id="903" class="Symbol">:</a> <a id="905" href="Inductive.Syntax.html#850" class="Datatype">RawType</a> <a id="913" class="Symbol">-&gt;</a> <a id="916" href="Inductive.Syntax.html#850" class="Datatype">RawType</a> <a id="924" class="Symbol">-&gt;</a> <a id="927" href="Inductive.Syntax.html#850" class="Datatype">RawType</a>
+    <a id="RawType.tyEq"></a><a id="939" href="Inductive.Syntax.html#939" class="InductiveConstructor">tyEq</a> <a id="944" class="Symbol">:</a> <a id="946" href="Inductive.Syntax.html#850" class="Datatype">RawType</a> <a id="954" class="Symbol">-&gt;</a> <a id="957" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="965" class="Symbol">-&gt;</a> <a id="968" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="976" class="Symbol">-&gt;</a> <a id="979" href="Inductive.Syntax.html#850" class="Datatype">RawType</a>
+    <a id="RawType.tyQtr"></a><a id="991" href="Inductive.Syntax.html#991" class="InductiveConstructor">tyQtr</a> <a id="997" class="Symbol">:</a> <a id="999" href="Inductive.Syntax.html#850" class="Datatype">RawType</a> <a id="1007" class="Symbol">-&gt;</a> <a id="1010" href="Inductive.Syntax.html#850" class="Datatype">RawType</a>
+
+  <a id="1021" class="Keyword">data</a> <a id="RawTerm"></a><a id="1026" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1034" class="Symbol">:</a> <a id="1036" href="Inductive.Prelude.html#173" class="Function">Type</a> <a id="1041" class="Keyword">where</a>
+    <a id="RawTerm.var"></a><a id="1051" href="Inductive.Syntax.html#1051" class="InductiveConstructor">var</a> <a id="1055" class="Symbol">:</a> <a id="1057" href="Data.Nat.Base.html#1069" class="Datatype">ℕ</a> <a id="1059" class="Symbol">-&gt;</a> <a id="1062" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmStar"></a><a id="1074" href="Inductive.Syntax.html#1074" class="InductiveConstructor">tmStar</a> <a id="1081" class="Symbol">:</a> <a id="1083" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmPair"></a><a id="1095" href="Inductive.Syntax.html#1095" class="InductiveConstructor">tmPair</a> <a id="1102" class="Symbol">:</a> <a id="1104" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1112" class="Symbol">-&gt;</a> <a id="1115" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1123" class="Symbol">-&gt;</a> <a id="1126" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmElSigma"></a><a id="1138" href="Inductive.Syntax.html#1138" class="InductiveConstructor">tmElSigma</a> <a id="1148" class="Symbol">:</a> <a id="1150" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1158" class="Symbol">-&gt;</a> <a id="1161" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1169" class="Symbol">-&gt;</a> <a id="1172" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmRefl"></a><a id="1184" href="Inductive.Syntax.html#1184" class="InductiveConstructor">tmRefl</a> <a id="1191" class="Symbol">:</a> <a id="1193" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmEq"></a><a id="1205" href="Inductive.Syntax.html#1205" class="InductiveConstructor">tmEq</a> <a id="1210" class="Symbol">:</a> <a id="1212" href="Inductive.Syntax.html#850" class="Datatype">RawType</a> <a id="1220" class="Symbol">-&gt;</a> <a id="1223" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1231" class="Symbol">-&gt;</a> <a id="1234" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmClass"></a><a id="1246" href="Inductive.Syntax.html#1246" class="InductiveConstructor">tmClass</a> <a id="1254" class="Symbol">:</a> <a id="1256" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1264" class="Symbol">-&gt;</a> <a id="1267" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+    <a id="RawTerm.tmElQtr"></a><a id="1279" href="Inductive.Syntax.html#1279" class="InductiveConstructor">tmElQtr</a> <a id="1287" class="Symbol">:</a> <a id="1289" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1297" class="Symbol">-&gt;</a> <a id="1300" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a> <a id="1308" class="Symbol">-&gt;</a> <a id="1311" href="Inductive.Syntax.html#1026" class="Datatype">RawTerm</a>
+</pre></body></html>

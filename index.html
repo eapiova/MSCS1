@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>MSCS1 — A canonical normal form theorem for the type theory of regular categories</title>
+<style>body{font-family:sans-serif;max-width:820px;margin:2em auto;padding:0 1em;line-height:1.5}
+a{color:#0366d6}li{margin:0.25em 0}h2{margin-top:1.5em}code{background:#f6f8fa;padding:0.1em 0.3em;border-radius:3px}</style>
+</head><body>
+<h1>A canonical normal form theorem for the type theory of regular categories</h1>
+<p>Browsable Agda sources accompanying the paper by Riccardo Borsetto and
+Maria Emilia Maietti. Checked with Agda 2.9.0 and agda-stdlib 2.3 under
+<code>--without-K</code>. Sources: <a href="https://github.com/eapiova/MSCS1">eapiova/MSCS1</a>,
+tag <code>v1.0.0</code>.</p>
+<h2><code>src/Recursive/</code> — the complete result</h2>
+<p>Tait-style logical relations; computability is a recursive function on type
+structure. 40 modules, every one <code>--safe</code>; no <code>TERMINATING</code>
+pragmas, no postulates, no holes.</p>
+<ul>
+<li><a href="Recursive.CanonicalForm.html">Recursive.CanonicalForm</a></li>
+<li><a href="Recursive.CompLemmas.html">Recursive.CompLemmas</a></li>
+<li><a href="Recursive.Computable.html">Recursive.Computable</a></li>
+<li><a href="Recursive.Context.html">Recursive.Context</a></li>
+<li><a href="Recursive.Contractibility.html">Recursive.Contractibility</a></li>
+<li><a href="Recursive.Corollaries.html">Recursive.Corollaries</a></li>
+<li><a href="Recursive.Derivability.html">Recursive.Derivability</a></li>
+<li><a href="Recursive.Env.html">Recursive.Env</a></li>
+<li><a href="Recursive.EvalSound.html">Recursive.EvalSound</a></li>
+<li><a href="Recursive.Evaluation.html">Recursive.Evaluation</a></li>
+<li><a href="Recursive.Everything.html">Recursive.Everything</a></li>
+<li><a href="Recursive.FullCanonicalForm.html">Recursive.FullCanonicalForm</a></li>
+<li><a href="Recursive.Fundamental.ComputabilityLemmas.html">Recursive.Fundamental.ComputabilityLemmas</a></li>
+<li><a href="Recursive.Fundamental.Core.html">Recursive.Fundamental.Core</a></li>
+<li><a href="Recursive.Fundamental.html">Recursive.Fundamental</a></li>
+<li><a href="Recursive.Fundamental.Infrastructure.html">Recursive.Fundamental.Infrastructure</a></li>
+<li><a href="Recursive.Fundamental.MeasureLemmas.html">Recursive.Fundamental.MeasureLemmas</a></li>
+<li><a href="Recursive.Fundamental.SumLemmas.html">Recursive.Fundamental.SumLemmas</a></li>
+<li><a href="Recursive.FundMeasure.html">Recursive.FundMeasure</a></li>
+<li><a href="Recursive.Inversion.Base.html">Recursive.Inversion.Base</a></li>
+<li><a href="Recursive.Inversion.Elim.html">Recursive.Inversion.Elim</a></li>
+<li><a href="Recursive.Inversion.html">Recursive.Inversion</a></li>
+<li><a href="Recursive.Inversion.TypeEq.html">Recursive.Inversion.TypeEq</a></li>
+<li><a href="Recursive.Inversion.Values.html">Recursive.Inversion.Values</a></li>
+<li><a href="Recursive.Measure.html">Recursive.Measure</a></li>
+<li><a href="Recursive.Minimal.Base.html">Recursive.Minimal.Base</a></li>
+<li><a href="Recursive.Minimal.html">Recursive.Minimal</a></li>
+<li><a href="Recursive.Minimal.Reflection.html">Recursive.Minimal.Reflection</a></li>
+<li><a href="Recursive.Minimal.Renaming.Core.html">Recursive.Minimal.Renaming.Core</a></li>
+<li><a href="Recursive.Minimal.Renaming.html">Recursive.Minimal.Renaming</a></li>
+<li><a href="Recursive.Minimal.Renaming.Lookup.html">Recursive.Minimal.Renaming.Lookup</a></li>
+<li><a href="Recursive.Minimal.SubstEq.html">Recursive.Minimal.SubstEq</a></li>
+<li><a href="Recursive.Minimal.Substitution.html">Recursive.Minimal.Substitution</a></li>
+<li><a href="Recursive.Numerals.html">Recursive.Numerals</a></li>
+<li><a href="Recursive.Prelude.html">Recursive.Prelude</a></li>
+<li><a href="Recursive.Presupposition.html">Recursive.Presupposition</a></li>
+<li><a href="Recursive.RulesAlaMSCS.html">Recursive.RulesAlaMSCS</a></li>
+<li><a href="Recursive.Smoke.html">Recursive.Smoke</a></li>
+<li><a href="Recursive.Substitution.html">Recursive.Substitution</a></li>
+<li><a href="Recursive.Syntax.html">Recursive.Syntax</a></li>
+</ul>
+<h2><code>src/Inductive/</code> — the direct attempt</h2>
+<p>The abandoned inductive-family encoding, kept for the contrast discussed in
+the paper: 21 modules, 18 <code>--safe</code>, two narrow
+<code>TERMINATING</code> pragmas in <code>CompTheorem</code>.</p>
+<ul>
+<li><a href="Inductive.CompTheorem.html">Inductive.CompTheorem</a></li>
+<li><a href="Inductive.Computability.html">Inductive.Computability</a></li>
+<li><a href="Inductive.Context.html">Inductive.Context</a></li>
+<li><a href="Inductive.Derivability.html">Inductive.Derivability</a></li>
+<li><a href="Inductive.EqComp.html">Inductive.EqComp</a></li>
+<li><a href="Inductive.Evaluation.html">Inductive.Evaluation</a></li>
+<li><a href="Inductive.Everything.html">Inductive.Everything</a></li>
+<li><a href="Inductive.FitsHelpers.html">Inductive.FitsHelpers</a></li>
+<li><a href="Inductive.Inversion.html">Inductive.Inversion</a></li>
+<li><a href="Inductive.MainTheorem.html">Inductive.MainTheorem</a></li>
+<li><a href="Inductive.Measure.html">Inductive.Measure</a></li>
+<li><a href="Inductive.OpenHyp.html">Inductive.OpenHyp</a></li>
+<li><a href="Inductive.Prelude.html">Inductive.Prelude</a></li>
+<li><a href="Inductive.Presupposition.html">Inductive.Presupposition</a></li>
+<li><a href="Inductive.QtrComp.html">Inductive.QtrComp</a></li>
+<li><a href="Inductive.SigmaComp.html">Inductive.SigmaComp</a></li>
+<li><a href="Inductive.StructuralBase.html">Inductive.StructuralBase</a></li>
+<li><a href="Inductive.Structural.html">Inductive.Structural</a></li>
+<li><a href="Inductive.Substitution.html">Inductive.Substitution</a></li>
+<li><a href="Inductive.Syntax.html">Inductive.Syntax</a></li>
+<li><a href="Inductive.TopComp.html">Inductive.TopComp</a></li>
+</ul><hr><p><small>HTML generated locally with the pinned toolchain (Agda 2.9.0 is not yet on Hackage, so it cannot be built in CI) and published from the <code>gh-pages</code> branch.</small></p></body></html>

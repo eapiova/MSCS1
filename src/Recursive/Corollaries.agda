@@ -106,3 +106,45 @@ natNoConfusion :
   -> ⊥
 natNoConfusion d with fullCanonicalFormTheorem d
 ... | _ , _ , _ , evalZero , evalSucV , evalNat , () , _ , _ , _
+
+-- ── Canonicity, clause by clause ─────────────────────────────────
+--
+-- The judgemental-equality reading of the canonical form theorem at
+-- each former: the theorem's derivable-equality field, specialised by
+-- the type's canonical shape.  The N clauses live in
+-- Recursive.Numerals (numeralForm, numeralDistinct).
+
+canonicityTop :
+  {t : RawTerm}
+  -> Derivable (hasTy [] t tyTop)
+  -> Derivable (termEq [] t tmStar tyTop)
+canonicityTop d with fullCanonicalTerm d
+... | _ , _ , _ , evalTop , canStarTm , dEq , _ = dEq
+
+canonicitySigma :
+  {t : RawTerm} {A B : RawType}
+  -> Derivable (hasTy [] t (tySigma A B))
+  -> Σ[ a ∈ RawTerm ] Σ[ b ∈ RawTerm ]
+       Derivable (termEq [] t (tmPair a b) (tySigma A B))
+     × Derivable (hasTy [] a A)
+     × Derivable (hasTy [] b (subTy (singleSubst a) B))
+canonicitySigma d with fullCanonicalTerm d
+... | _ , _ , _ , evalSigma , canPairTm da db _ , dEq , _ =
+  _ , _ , dEq , da , db
+
+canonicityEq :
+  {p : RawTerm} {A : RawType} {a b : RawTerm}
+  -> Derivable (hasTy [] p (tyEq A a b))
+  -> Derivable (termEq [] p tmRefl (tyEq A a b))
+canonicityEq d with fullCanonicalTerm d
+... | _ , _ , _ , evalEq , canReflTm _ , dEq , _ = dEq
+
+canonicityQtr :
+  {t : RawTerm} {A : RawType}
+  -> Derivable (hasTy [] t (tyQtr A))
+  -> Σ[ a ∈ RawTerm ]
+       Derivable (termEq [] t (tmClass a) (tyQtr A))
+     × Derivable (hasTy [] a A)
+canonicityQtr d with fullCanonicalTerm d
+... | _ , _ , _ , evalQtr , canClassTm da , dEq , _ =
+  _ , dEq , da

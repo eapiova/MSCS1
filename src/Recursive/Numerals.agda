@@ -131,3 +131,27 @@ noEqProofDistinctNumerals :
 noEqProofDistinctNumerals m n neq d =
   numeralDistinct m n neq
     (eEqStar d (fNat wfNil) (numeralTy m) (numeralTy n))
+
+-- The converse direction: a judgemental equation between numerals
+-- would inhabit the corresponding Eq type, by introduction at the
+-- left numeral followed by conversion along the congruence.  So the
+-- judgemental statement (numeralDistinct) and the propositional one
+-- (noEqProofDistinctNumerals) are interderivable in this calculus:
+-- reflection carries one way, introduction the other.
+
+numeralEqInhabits :
+  (m n : ℕ)
+  -> Derivable (termEq [] (numeral m) (numeral n) tyNat)
+  -> Derivable (hasTy [] tmRefl (tyEq tyNat (numeral m) (numeral n)))
+numeralEqInhabits m n d =
+  conv (iEq (numeralTy m))
+    (fEqEq (reflTy (fNat wfNil)) (reflTm (numeralTy m)) d)
+
+numeralDistinctFromConsistency :
+  ((m n : ℕ) -> ¬ (m ≡ n) -> {p : RawTerm}
+    -> Derivable (hasTy [] p (tyEq tyNat (numeral m) (numeral n))) -> ⊥)
+  -> (m n : ℕ) -> ¬ (m ≡ n)
+  -> Derivable (termEq [] (numeral m) (numeral n) tyNat)
+  -> ⊥
+numeralDistinctFromConsistency cons m n neq d =
+  cons m n neq (numeralEqInhabits m n d)

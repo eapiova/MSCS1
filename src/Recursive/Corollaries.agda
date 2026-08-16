@@ -3,6 +3,7 @@
 module Recursive.Corollaries where
 
 open import Data.Empty using (⊥)
+open import Recursive.Prelude using (_≡_)
 open import Data.List.Base using ([])
 open import Data.Product using (Σ-syntax ; _×_ ; _,_)
 
@@ -12,7 +13,7 @@ open import Recursive.Substitution
 open import Recursive.Evaluation
 open import Recursive.Derivability
 open import Recursive.Minimal using (derivableToMinimal)
-open import Recursive.Inversion using (minimalTyEqHead)
+open import Recursive.Inversion using (minimalTyEqHead ; TyHead ; tyHead)
 open import Recursive.FullCanonicalForm
 
 -- Valentini 3.10.8, restricted to the Treg fragment:
@@ -48,6 +49,17 @@ sigmaExistential :
 sigmaExistential {A = A} {B = B} d with fullCanonicalFormTheorem d
 ... | tmPair a b , .(tySigma A B) , ev , evalSigma , canPairTm da db _ , ceq , _ =
   a , b , ev , da , db , ceq
+
+-- The general non-collapse statement: judgemental type equality never
+-- relates types with different outermost formers, in any context and
+-- for all five formers.  The named corollaries below are instances;
+-- this is the statement the paper's "more generally" clause makes.
+
+typeEqSameHead :
+  {gamma : Ctx} {A B : RawType}
+  -> Derivable (typeEq gamma A B)
+  -> tyHead A ≡ tyHead B
+typeEqSameHead d = minimalTyEqHead (derivableToMinimal d)
 
 -- Treg has no empty type N0, so Valentini 3.10.5 cannot be stated literally.
 -- The corresponding consistency statement for this fragment is non-collapse:

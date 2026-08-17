@@ -12,15 +12,12 @@
 --   existenceProperty  -- the meta-theoretic existence property
 --   morConstant        -- every morphism is the constant at the centre
 --   morInhabited       -- and at least one morphism exists
---   numeralIndexIndep  -- the numeral index depends on the term only
 
 module Recursive.Existence where
 
 open import Data.List.Base using ([] ; _∷_)
-open import Data.Nat.Base using (ℕ)
-open import Data.Product using (Σ-syntax ; _×_ ; _,_ ; proj₁ ; proj₂)
+open import Data.Product using (Σ-syntax ; _×_ ; _,_)
 open import Relation.Binary.PropositionalEquality using (subst₂)
-open import Relation.Nullary using (¬_)
 
 open import Recursive.Prelude
 open import Recursive.Syntax
@@ -30,7 +27,6 @@ open import Recursive.Derivability
 open import Recursive.Corollaries using (canonicityQtr ; canonicitySigma)
 open import Recursive.Contractibility using
   (NatFree ; Contraction ; contractible ; center ; centerTm ; contract)
-open import Recursive.Numerals using (numeral ; numeralForm ; numeralDistinct)
 
 -- ── The mono existential ─────────────────────────────────────────
 --

@@ -1,5 +1,16 @@
 {-# OPTIONS --safe #-}
 
+-- Evaluation-core control for the paper's architecture comparison.
+--
+-- The four canonical readout functions mirror Inductive.MainTheorem.
+-- On the common Treg fragment, canonicalFormTheorem is the recursive
+-- counterpart of Inductive.CompTheorem.canonicalFormTheorem.
+--
+-- Recursive.FullCanonicalForm strictly strengthens this result with
+-- canonical-shape witnesses and derivable equalities. This module is
+-- retained to separate encoding architecture from statement strength;
+-- typeEval is also reused by the full theorem.
+
 module Recursive.CanonicalForm where
 
 open import Recursive.Prelude

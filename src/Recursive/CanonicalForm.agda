@@ -8,8 +8,7 @@
 --
 -- Recursive.FullCanonicalForm strictly strengthens this result with
 -- canonical-shape witnesses and derivable equalities. This module is
--- retained to separate encoding architecture from statement strength;
--- typeEval is also reused by the full theorem.
+-- retained to separate encoding architecture from statement strength.
 
 module Recursive.CanonicalForm where
 
@@ -26,67 +25,57 @@ open import Recursive.Computable
 open import Recursive.Fundamental
 
 CanonicalForm : JForm -> Type
-CanonicalForm (isType [] A) =
-  Σ[ G ∈ RawType ] (A =>t G) × Derivable (typeEq [] A G)
+CanonicalForm (isType [] A) = ⊤
 CanonicalForm (hasTy [] t A) =
-  Σ[ g ∈ RawTerm ] Σ[ G ∈ RawType ] (t =>e g) × (A =>t G)
-CanonicalForm (typeEq [] A B) =
-  Σ[ G ∈ RawType ] Σ[ H ∈ RawType ] (A =>t G) × (B =>t H)
+  Σ[ g ∈ RawTerm ] t =>e g
+CanonicalForm (typeEq [] A B) = ⊤
 CanonicalForm (termEq [] t u A) =
-  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] Σ[ G ∈ RawType ]
-    (t =>e g) × (u =>e h) × (A =>t G)
+  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] (t =>e g) × (u =>e h)
 CanonicalForm (isType (_ ∷ _) A) = ⊤
 CanonicalForm (hasTy (_ ∷ _) t A) = ⊤
 CanonicalForm (typeEq (_ ∷ _) A B) = ⊤
 CanonicalForm (termEq (_ ∷ _) t u A) = ⊤
 
-typeEval : (A : RawType) -> A =>t A
-typeEval tyTop = evalTop
-typeEval (tySigma A B) = evalSigma
-typeEval (tyEq A a b) = evalEq
-typeEval (tyQtr A) = evalQtr
-typeEval tyNat = evalNat
 
 canonicalType : {A : RawType}
   -> Derivable (isType [] A)
-  -> Σ[ G ∈ RawType ] (A =>t G) × Derivable (typeEq [] A G)
-canonicalType {A = A} d = A , typeEval A , reflTy d
+  -> ⊤
+canonicalType _ = tt
 
 canonicalTypeEq : {A B : RawType}
   -> Derivable (typeEq [] A B)
-  -> Σ[ G ∈ RawType ] Σ[ H ∈ RawType ] (A =>t G) × (B =>t H)
-canonicalTypeEq {A = A} {B = B} d = A , B , typeEval A , typeEval B
+  -> ⊤
+canonicalTypeEq _ = tt
 
 canonicalTerm : {t : RawTerm} {A : RawType}
   -> Derivable (hasTy [] t A)
-  -> Σ[ g ∈ RawTerm ] Σ[ G ∈ RawType ] (t =>e g) × (A =>t G)
-canonicalTerm {A = A} d =
+  -> Σ[ g ∈ RawTerm ] t =>e g
+canonicalTerm d =
   let g , evt , cg = computableResult (fundTmClosed d) in
-  g , A , evt , typeEval A
+  g , evt
 
 canonicalTermEq : {t u : RawTerm} {A : RawType}
   -> Derivable (termEq [] t u A)
-  -> Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] Σ[ G ∈ RawType ]
-       (t =>e g) × (u =>e h) × (A =>t G)
+  -> Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] (t =>e g) × (u =>e h)
 canonicalTermEq {A = tyTop} d =
   let evt , evu = fundTmEqClosed d in
-  tmStar , tmStar , tyTop , evt , evu , evalTop
+  tmStar , tmStar , evt , evu
 canonicalTermEq {A = tySigma A B} d =
   let a , b , c , e , evt , evu , eqA , eqB , tyB =
         computableTmEqSigma-elim (fundTmEqClosed d)
   in
-  tmPair a b , tmPair c e , tySigma A B , evt , evu , evalSigma
+  tmPair a b , tmPair c e , evt , evu
 canonicalTermEq {A = tyEq A a b} d =
   let evt , evu , eqab = computableTmEqEqForm-elim (fundTmEqClosed d) in
-  tmRefl , tmRefl , tyEq A a b , evt , evu , evalEq
+  tmRefl , tmRefl , evt , evu
 canonicalTermEq {A = tyQtr A} d =
   let p , q , evt , evu , epp , eqq = computableTmEqQtr-elim (fundTmEqClosed d) in
-  tmClass p , tmClass q , tyQtr A , evt , evu , evalQtr
+  tmClass p , tmClass q , evt , evu
 canonicalTermEq {A = tyNat} d with fundTmEqClosed d
 ... | cZeroVEq evt evu =
-  tmZero , tmZero , tyNat , evt , evu , evalNat
+  tmZero , tmZero , evt , evu
 ... | cSucVEq {k = k} {k' = k'} evt evu _ =
-  tmSuc k , tmSuc k' , tyNat , evt , evu , evalNat
+  tmSuc k , tmSuc k' , evt , evu
 
 canonicalFormTheorem : {J : JForm} -> Derivable J -> CanonicalForm J
 canonicalFormTheorem {J = isType [] A} d = canonicalType d

@@ -87,7 +87,7 @@ fullSmokeSigmaPairEq = fullCanonicalFormTheorem dPairEq
 fullSmokeSigmaPairEqCanonical :
   CanonicalTmEq (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop)
 fullSmokeSigmaPairEqCanonical =
-  proj₁ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ fullSmokeSigmaPairEq))))))
+  proj₁ (proj₂ (proj₂ (proj₂ (proj₂ fullSmokeSigmaPairEq))))
 
 sigmaPairEqFst :
   CanonicalTmEq (tmPair tmStar tmStar) (tmPair tmStar tmStar) (tySigma tyTop tyTop)
@@ -191,7 +191,7 @@ qtrClassRepresentativeTy (canClassTm da) = da
 fullSmokeQtrClassRepresentativeTy : Derivable (hasTy [] tmStar tyTop)
 fullSmokeQtrClassRepresentativeTy =
   qtrClassRepresentativeTy
-    (proj₁ (proj₂ (proj₂ (proj₂ (proj₂ fullSmokeQtrClass)))))
+    (proj₁ (proj₂ (proj₂ fullSmokeQtrClass)))
 
 -- Nat non-vacuity: the eliminator doubles one to two.
 dNat : Derivable (isType [] tyNat)
@@ -233,7 +233,7 @@ evalDouble =
 
 smokeNatElimReduces : proj₁ (canonicalFormTheorem dDouble) ≡ tmSuc (tmSuc tmZero)
 smokeNatElimReduces =
-  evalDetTm (proj₁ (proj₂ (proj₂ (canonicalFormTheorem dDouble)))) evalDouble
+  evalDetTm (proj₂ (canonicalFormTheorem dDouble)) evalDouble
 
 fullSmokeNatElim : FullCanonicalForm
   (hasTy []
@@ -244,17 +244,17 @@ fullSmokeNatElim =
 
 fullSmokeNatElimReduces : proj₁ fullSmokeNatElim ≡ tmSuc (tmSuc tmZero)
 fullSmokeNatElimReduces =
-  evalDetTm (proj₁ (proj₂ (proj₂ fullSmokeNatElim))) evalDouble
+  evalDetTm (proj₁ (proj₂ fullSmokeNatElim)) evalDouble
 
 smokeNumeralDistinct :
   Derivable (termEq [] tmZero (tmSuc tmZero) tyNat)
   -> ⊥
 smokeNumeralDistinct = natNoConfusion
 
-smokeTregConsistent :
+smokeTregNonCollapse :
   Derivable (typeEq [] tyTop (tySigma tyTop tyTop))
   -> ⊥
-smokeTregConsistent = tregConsistent
+smokeTregNonCollapse = tregNonCollapse
 
 smokeQtrHeadInversion : IsJust (invQtrHead? dQtrElim)
 smokeQtrHeadInversion = tt
@@ -421,10 +421,9 @@ cfAdv : CanonicalForm (hasTy [] (tmElQtr tmRefl (tmClass tmStar))
   (subTy (singleSubst (tmClass tmStar)) Ladv))
 cfAdv = canonicalFormTheorem dElimAdv
 
--- DECISIVE: the worst-case dependent-motive eliminator computes to tmRefl,
--- and the type component is the declared type.
+-- DECISIVE: the worst-case dependent-motive eliminator computes to tmRefl.
+-- (The companion check that the "evaluated" type component is the declared
+-- type is gone with type evaluation: there is no such component now, and
+-- the readout is indexed by the declared type itself.)
 smokeQtrAdvReduces : proj₁ cfAdv ≡ tmRefl
 smokeQtrAdvReduces = refl
-
-smokeQtrAdvType : proj₁ (proj₂ cfAdv) ≡ subTy (singleSubst (tmClass tmStar)) Ladv
-smokeQtrAdvType = refl

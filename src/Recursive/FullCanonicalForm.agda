@@ -21,7 +21,6 @@ open import Recursive.Minimal using (derivableToMinimal)
 open import Recursive.Computable
 open import Recursive.Fundamental
 open import Recursive.EvalSound
-open import Recursive.CanonicalForm using (typeEval)
 open import Recursive.Measure
 
 data CanonicalTy : RawType -> Type where
@@ -472,33 +471,21 @@ computableTmEqDerivable {A = A} =
 
 FullCanonicalForm : JForm -> Type
 FullCanonicalForm (isType [] A) =
-  Σ[ G ∈ RawType ]
-    (A =>t G) ×
-    CanonicalTy G ×
-    Derivable (typeEq [] A G)
+  CanonicalTy A
 FullCanonicalForm (hasTy [] t A) =
-  Σ[ g ∈ RawTerm ] Σ[ G ∈ RawType ]
+  Σ[ g ∈ RawTerm ]
     (t =>e g) ×
-    (A =>t G) ×
-    CanonicalTm g G ×
-    Derivable (termEq [] t g A) ×
-    Derivable (typeEq [] A G)
+    CanonicalTm g A ×
+    Derivable (termEq [] t g A)
 FullCanonicalForm (typeEq [] A B) =
-  Σ[ G ∈ RawType ] Σ[ H ∈ RawType ]
-    (A =>t G) ×
-    (B =>t H) ×
-    CanonicalTyEq G H ×
-    Derivable (typeEq [] A G) ×
-    Derivable (typeEq [] B H)
+  CanonicalTyEq A B
 FullCanonicalForm (termEq [] t u A) =
-  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] Σ[ G ∈ RawType ]
+  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ]
     (t =>e g) ×
     (u =>e h) ×
-    (A =>t G) ×
-    CanonicalTmEq g h G ×
+    CanonicalTmEq g h A ×
     Derivable (termEq [] t g A) ×
-    Derivable (termEq [] u h A) ×
-    Derivable (typeEq [] A G)
+    Derivable (termEq [] u h A)
 FullCanonicalForm _ = ⊤
 
 fullCanonicalType :
@@ -506,31 +493,27 @@ fullCanonicalType :
   -> Derivable (isType [] A)
   -> FullCanonicalForm (isType [] A)
 fullCanonicalType {A = A} d =
-  A , typeEval A , canonicalTyFromDerivable d , reflTy d
+  canonicalTyFromDerivable d
 
 fullCanonicalTerm :
   {t : RawTerm} {A : RawType}
   -> Derivable (hasTy [] t A)
   -> FullCanonicalForm (hasTy [] t A)
 fullCanonicalTerm {A = tyTop} d =
-  tmStar , tyTop ,
+  tmStar ,
     ev ,
-    evalTop ,
     canStarTm ,
-    soundEq ,
-    reflTy (assocTy d)
+    soundEq
   where
   ev = fundTmClosed d
   sound = evalSoundTm d ev
   soundEq = proj₂ sound
 fullCanonicalTerm {A = tySigma A B} d with computableSigma-elim (fundTmClosed d)
 ... | a , b , ev , _ , _ =
-  tmPair a b , tySigma A B ,
+  tmPair a b ,
     ev ,
-    evalSigma ,
     canPairTm (pairFstTy pairPrem) (pairSndTy pairPrem) (pairSigmaTy pairPrem) ,
-    soundEq ,
-    reflTy (assocTy d)
+    soundEq
   where
   sound = evalSoundTm d ev
   soundTy = proj₁ sound
@@ -538,12 +521,10 @@ fullCanonicalTerm {A = tySigma A B} d with computableSigma-elim (fundTmClosed d)
   pairPrem = invPairAtSigma soundTy
 fullCanonicalTerm {A = tyEq A a b} d with computableEq-elim (fundTmClosed d)
 ... | ev , _ =
-  tmRefl , tyEq A a b ,
+  tmRefl ,
     ev ,
-    evalEq ,
     canReflTm boundaryEq ,
-    soundEq ,
-    reflTy (assocTy d)
+    soundEq
   where
   sound = evalSoundTm d ev
   soundEq = proj₂ sound
@@ -551,12 +532,10 @@ fullCanonicalTerm {A = tyEq A a b} d with computableEq-elim (fundTmClosed d)
   boundaryEq = eEqStar d (typeTy eqTyPrem) (leftTm eqTyPrem) (rightTm eqTyPrem)
 fullCanonicalTerm {A = tyQtr A} d with computableQtr-elim (fundTmClosed d)
 ... | a , ev , _ =
-  tmClass a , tyQtr A ,
+  tmClass a ,
     ev ,
-    evalQtr ,
     canClassTm (classRepTy classPrem) ,
-    soundEq ,
-    reflTy (assocTy d)
+    soundEq
   where
   sound = evalSoundTm d ev
   soundTy = proj₁ sound
@@ -564,22 +543,18 @@ fullCanonicalTerm {A = tyQtr A} d with computableQtr-elim (fundTmClosed d)
   classPrem = invClassAtQtr soundTy
 fullCanonicalTerm {A = tyNat} d with fundTmClosed d
 ... | cZeroV ev =
-  tmZero , tyNat ,
+  tmZero ,
     ev ,
-    evalNat ,
     canZeroTm ,
-    soundEq ,
-    reflTy (assocTy d)
+    soundEq
   where
   sound = evalSoundTm d ev
   soundEq = proj₂ sound
 ... | cSucV {k = k} ev _ =
-  tmSuc k , tyNat ,
+  tmSuc k ,
     ev ,
-    evalNat ,
     canSucTm predTy ,
-    soundEq ,
-    reflTy (assocTy d)
+    soundEq
   where
   sound = evalSoundTm d ev
   soundTy = proj₁ sound
@@ -594,26 +569,19 @@ fullCanonicalTypeEq :
   -> Derivable (typeEq [] A B)
   -> FullCanonicalForm (typeEq [] A B)
 fullCanonicalTypeEq {A = A} {B = B} d =
-  A , B ,
-    typeEval A ,
-    typeEval B ,
-    canonicalTyEqFromDerivable d ,
-    reflTy (assocTyLeft d) ,
-    reflTy (assocTyRight d)
+  canonicalTyEqFromDerivable d
 
 fullCanonicalTermEq :
   {t u : RawTerm} {A : RawType}
   -> Derivable (termEq [] t u A)
   -> FullCanonicalForm (termEq [] t u A)
 fullCanonicalTermEq {A = tyTop} d =
-  tmStar , tmStar , tyTop ,
+  tmStar , tmStar ,
     evt ,
     evu ,
-    evalTop ,
     canStarTmEq ,
     leftEq ,
-    rightEq ,
-    reflTy (assocTmTy d)
+    rightEq
   where
   evs = fundTmEqClosed d
   evt = proj₁ evs
@@ -624,14 +592,12 @@ fullCanonicalTermEq {A = tyTop} d =
   rightEq = proj₂ rightSound
 fullCanonicalTermEq {A = tySigma A B} d with computableTmEqSigma-elim (fundTmEqClosed d)
 ... | a , b , c , e , evt , evu , eqA , eqB , _ =
-  tmPair a b , tmPair c e , tySigma A B ,
+  tmPair a b , tmPair c e ,
     evt ,
     evu ,
-    evalSigma ,
     canPairTmEq dac dbd dA dB ,
     leftEq ,
-    rightEq ,
-    reflTy (assocTmTy d)
+    rightEq
   where
   leftSound = evalSoundTm (assocTmLeft d) evt
   rightSound = evalSoundTm (assocTmRight d) evu
@@ -679,14 +645,12 @@ fullCanonicalTermEq {A = tySigma A B} d with computableTmEqSigma-elim (fundTmEqC
       eqB
 fullCanonicalTermEq {A = tyEq A a b} d with computableTmEqEqForm-elim (fundTmEqClosed d)
 ... | evt , evu , _ =
-  tmRefl , tmRefl , tyEq A a b ,
+  tmRefl , tmRefl ,
     evt ,
     evu ,
-    evalEq ,
     canReflTmEq boundaryEq ,
     leftEq ,
-    rightEq ,
-    reflTy (assocTmTy d)
+    rightEq
   where
   leftSound = evalSoundTm (assocTmLeft d) evt
   rightSound = evalSoundTm (assocTmRight d) evu
@@ -697,14 +661,12 @@ fullCanonicalTermEq {A = tyEq A a b} d with computableTmEqEqForm-elim (fundTmEqC
     eEqStar (assocTmLeft d) (typeTy eqTyPrem) (leftTm eqTyPrem) (rightTm eqTyPrem)
 fullCanonicalTermEq {A = tyQtr A} d with computableTmEqQtr-elim (fundTmEqClosed d)
 ... | a , b , evt , evu , _ , _ =
-  tmClass a , tmClass b , tyQtr A ,
+  tmClass a , tmClass b ,
     evt ,
     evu ,
-    evalQtr ,
     canClassTmEq (classRepTy leftClass) (classRepTy rightClass) ,
     leftEq ,
-    rightEq ,
-    reflTy (assocTmTy d)
+    rightEq
   where
   leftSound = evalSoundTm (assocTmLeft d) evt
   rightSound = evalSoundTm (assocTmRight d) evu
@@ -716,28 +678,24 @@ fullCanonicalTermEq {A = tyQtr A} d with computableTmEqQtr-elim (fundTmEqClosed 
   rightClass = invClassAtQtr rightTyDeriv
 fullCanonicalTermEq {A = tyNat} d with fundTmEqClosed d
 ... | cZeroVEq evt evu =
-  tmZero , tmZero , tyNat ,
+  tmZero , tmZero ,
     evt ,
     evu ,
-    evalNat ,
     canZeroTmEq ,
     leftEq ,
-    rightEq ,
-    reflTy (assocTmTy d)
+    rightEq
   where
   leftSound = evalSoundTm (assocTmLeft d) evt
   rightSound = evalSoundTm (assocTmRight d) evu
   leftEq = proj₂ leftSound
   rightEq = proj₂ rightSound
 ... | cSucVEq {k = k} {k' = k'} evt evu eqK =
-  tmSuc k , tmSuc k' , tyNat ,
+  tmSuc k , tmSuc k' ,
     evt ,
     evu ,
-    evalNat ,
     canSucTmEq predEq ,
     leftEq ,
-    rightEq ,
-    reflTy (assocTmTy d)
+    rightEq
   where
   leftSound = evalSoundTm (assocTmLeft d) evt
   rightSound = evalSoundTm (assocTmRight d) evu

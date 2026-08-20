@@ -17,21 +17,13 @@ open import Recursive.Inversion using (minimalTyEqHead ; TyHead ; tyHead)
 open import Recursive.FullCanonicalForm
 
 -- Valentini 3.10.8, restricted to the Treg fragment:
--- every closed derivable type/term has a canonical value.
-evaluationType :
-  {A : RawType}
-  -> Derivable (isType [] A)
-  -> Σ[ G ∈ RawType ] A =>t G
-evaluationType d with fullCanonicalFormTheorem d
-... | G , ev , _ =
-  G , ev
-
+-- every closed derivable term has a canonical value.
 evaluationTerm :
   {t : RawTerm} {A : RawType}
   -> Derivable (hasTy [] t A)
   -> Σ[ g ∈ RawTerm ] t =>e g
 evaluationTerm d with fullCanonicalFormTheorem d
-... | g , _ , ev , _ =
+... | g , ev , _ =
   g , ev
 
 -- Valentini 3.10.7, for the Sigma type former present in Treg.
@@ -47,7 +39,7 @@ sigmaExistential :
      × Derivable (hasTy [] b (subTy (singleSubst a) B))
      × Derivable (termEq [] c (tmPair a b) (tySigma A B))
 sigmaExistential {A = A} {B = B} d with fullCanonicalFormTheorem d
-... | tmPair a b , .(tySigma A B) , ev , evalSigma , canPairTm da db _ , ceq , _ =
+... | tmPair a b , ev , canPairTm da db _ , ceq =
   a , b , ev , da , db , ceq
 
 -- The general non-collapse statement: judgemental type equality never
@@ -106,18 +98,23 @@ qtrNotTop :
 qtrNotTop d with minimalTyEqHead (derivableToMinimal d)
 ... | ()
 
--- A compact named consistency corollary: Top is not definitionally equal to
--- the inhabited Sigma(Top, Top) type.
-tregConsistent :
+-- Strict type-syntax non-collapse, in the paper's terminology: Top and
+-- Sigma(Top, Top) are isomorphic in every model -- a terminal object and a
+-- product of two terminal objects -- yet the syntax does not identify them.
+-- NOT consistency in the usual sense: pure Treg has no empty type and every
+-- closed type is inhabited, so there is no false proposition to exhibit.
+-- The statement with propositional content is noEqProofDistinctNumerals,
+-- which needs Nat.
+tregNonCollapse :
   Derivable (typeEq [] tyTop (tySigma tyTop tyTop))
   -> ⊥
-tregConsistent = topNotSigma
+tregNonCollapse = topNotSigma
 
 natNoConfusion :
   Derivable (termEq [] tmZero (tmSuc tmZero) tyNat)
   -> ⊥
 natNoConfusion d with fullCanonicalFormTheorem d
-... | _ , _ , _ , evalZero , evalSucV , evalNat , () , _ , _ , _
+... | _ , _ , evalZero , evalSucV , () , _ , _
 
 -- ── Canonicity, clause by clause ─────────────────────────────────
 --
@@ -131,7 +128,7 @@ canonicityTop :
   -> Derivable (hasTy [] t tyTop)
   -> Derivable (termEq [] t tmStar tyTop)
 canonicityTop d with fullCanonicalTerm d
-... | _ , _ , _ , evalTop , canStarTm , dEq , _ = dEq
+... | _ , _ , canStarTm , dEq = dEq
 
 canonicitySigma :
   {t : RawTerm} {A B : RawType}
@@ -141,7 +138,7 @@ canonicitySigma :
      × Derivable (hasTy [] a A)
      × Derivable (hasTy [] b (subTy (singleSubst a) B))
 canonicitySigma d with fullCanonicalTerm d
-... | _ , _ , _ , evalSigma , canPairTm da db _ , dEq , _ =
+... | _ , _ , canPairTm da db _ , dEq =
   _ , _ , dEq , da , db
 
 canonicityEq :
@@ -149,7 +146,7 @@ canonicityEq :
   -> Derivable (hasTy [] p (tyEq A a b))
   -> Derivable (termEq [] p tmRefl (tyEq A a b))
 canonicityEq d with fullCanonicalTerm d
-... | _ , _ , _ , evalEq , canReflTm _ , dEq , _ = dEq
+... | _ , _ , canReflTm _ , dEq = dEq
 
 canonicityQtr :
   {t : RawTerm} {A : RawType}
@@ -158,5 +155,5 @@ canonicityQtr :
        Derivable (termEq [] t (tmClass a) (tyQtr A))
      × Derivable (hasTy [] a A)
 canonicityQtr d with fullCanonicalTerm d
-... | _ , _ , _ , evalQtr , canClassTm da , dEq , _ =
+... | _ , _ , canClassTm da , dEq =
   _ , dEq , da

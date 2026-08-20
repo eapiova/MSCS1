@@ -256,7 +256,7 @@ ComputableTmAcc-cast (tyQtr A) (acc rsP) (acc rsQ) t (p , ev , cA) =
 ComputableTmAcc-cast tyNat p q t x = x
 
 -- ── Type computability ───────────────────────────────────────────
--- Types are reflexively canonical (`_=>t_` is reflexive on formers).
+-- Types need no evaluation: every raw type is already headed by a former.
 -- `ComputableTy` is the hereditary predicate: the components are
 -- computable types, with Sigma families respecting term equality.
 

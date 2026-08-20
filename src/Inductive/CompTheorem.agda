@@ -7635,14 +7635,12 @@ eqSubDerivTyEqComp : {n : ℕ} -> {gamma : Ctx} {A B : RawType} {sigma tau : Sub
 eqSubDerivTyEqComp {n} d fitsEq = eqSubDerivTyEqCompCF d fitsEq (fitsEqToCompFitsEq fitsEq) (LexLt-wf _)
 
 CanonicalForm : JForm -> Type
-CanonicalForm (isType [] A) =
-  Σ[ G ∈ RawType ] (A =>t G) × Derivable (typeEq [] A G)
-CanonicalForm (typeEq [] A B) =
-  Σ[ G ∈ RawType ] Σ[ H ∈ RawType ] (A =>t G) × (B =>t H)
+CanonicalForm (isType [] A) = Unit
+CanonicalForm (typeEq [] A B) = Unit
 CanonicalForm (hasTy [] t A) =
-  Σ[ g ∈ RawTerm ] Σ[ G ∈ RawType ] (t =>e g) × (A =>t G)
+  Σ[ g ∈ RawTerm ] (t =>e g)
 CanonicalForm (termEq [] t u A) =
-  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] Σ[ G ∈ RawType ] (t =>e g) × (u =>e h) × (A =>t G)
+  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] (t =>e g) × (u =>e h)
 CanonicalForm (isType (_ ∷ _) A) = Unit
 CanonicalForm (typeEq (_ ∷ _) A B) = Unit
 CanonicalForm (hasTy (_ ∷ _) t A) = Unit

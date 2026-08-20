@@ -5,6 +5,7 @@ module Inductive.MainTheorem where
 
 open import Inductive.Prelude
 open import Data.Product using (Σ-syntax ; _×_ ; _,_)
+open import Data.Unit using (tt) renaming (⊤ to Unit)
 open import Data.List.Base using ([] ; _∷_)
 
 open import Inductive.Syntax
@@ -18,54 +19,38 @@ open import Inductive.Inversion
 canonicalType : {n : ℕ} ->
   {A : RawType} ->
   Computable n (isType [] A) ->
-  Σ[ G ∈ RawType ] (A =>t G) × Derivable (typeEq [] A G)
-canonicalType (compTyClosedTop _ ev corr) = tyTop , (ev , corr)
-canonicalType (compTyClosedSigma {B = B} {C = C} _ ev corr _ _) =
-  tySigma B C , (ev , corr)
-canonicalType (compTyClosedEq {B = B} {a = a} {b = b} _ ev corr _ _ _) =
-  tyEq B a b , (ev , corr)
-canonicalType (compTyClosedQtr {B = B} _ ev corr _) =
-  tyQtr B , (ev , corr)
+  Unit
+canonicalType _ = tt
 
 canonicalTypeEq : {n : ℕ} ->
   {A B : RawType} ->
   Computable n (typeEq [] A B) ->
-  Σ[ G ∈ RawType ] Σ[ H ∈ RawType ] (A =>t G) × (B =>t H)
-canonicalTypeEq (compTyEqClosedTop _ _ _ evA evB) =
-  tyTop , tyTop , (evA , evB)
-canonicalTypeEq (compTyEqClosedSigma {C = C} {D = D} {E = E} {F = F} _ _ _ evA evB _ _) =
-  tySigma C D , tySigma E F , (evA , evB)
-canonicalTypeEq (compTyEqClosedEq _ _ _ evA evB _ _ _) with evA | evB
-... | evalEq {A = C} {a = a} {b = b} | evalEq {A = D} {a = c} {b = d} =
-  tyEq C a b , tyEq D c d , (evA , evB)
-canonicalTypeEq (compTyEqClosedQtr {C = C} {D = D} _ _ _ evA evB _) =
-  tyQtr C , tyQtr D , (evA , evB)
+  Unit
+canonicalTypeEq _ = tt
 
 canonicalTerm : {n : ℕ} ->
   {t : RawTerm} {A : RawType} ->
   Computable n (hasTy [] t A) ->
-  Σ[ g ∈ RawTerm ] Σ[ G ∈ RawType ] (t =>e g) × (A =>t G)
-canonicalTerm (compTmClosedTop _ _ evA evt _) =
-  tmStar , tyTop , (evt , evA)
-canonicalTerm (compTmClosedSigma {a = a} {b = b} {A = A} {B = B} _ _ evG evt _ _ _) =
-  tmPair a b , tySigma A B , (evt , evG)
-canonicalTerm (compTmClosedEq {t = t₀} {a = a₀} {b = b₀} {A = A₀} {G = G₀}
-  _ _ evG evt _ _) =
-  tmRefl , tyEq A₀ a₀ b₀ , (evt , evG)
-canonicalTerm (compTmClosedQtr {a = a} {A = A} _ _ evG evt _ _) =
-  tmClass a , tyQtr A , (evt , evG)
+  Σ[ g ∈ RawTerm ] (t =>e g)
+canonicalTerm (compTmClosedTop _ _ _ evt _) =
+  tmStar , evt
+canonicalTerm (compTmClosedSigma {a = a} {b = b} _ _ _ evt _ _ _) =
+  tmPair a b , evt
+canonicalTerm (compTmClosedEq _ _ _ evt _ _) =
+  tmRefl , evt
+canonicalTerm (compTmClosedQtr {a = a} _ _ _ evt _ _) =
+  tmClass a , evt
 
 canonicalTermEq : {n : ℕ} ->
   {t u : RawTerm} {A : RawType} ->
   Computable n (termEq [] t u A) ->
-  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] Σ[ G ∈ RawType ] (t =>e g) × (u =>e h) × (A =>t G)
-canonicalTermEq (compTmEqClosedTop _ _ _ evA evt evu) =
-  tmStar , tmStar , tyTop , (evt , evu , evA)
-canonicalTermEq (compTmEqClosedSigma {a = a} {b = b} {c = c} {d = d} {A = A} {B = B}
-  _ _ _ evG evt evu _ _) =
-  tmPair a b , tmPair c d , tySigma A B , (evt , evu , evG)
-canonicalTermEq (compTmEqClosedEq {t = t₀} {u = u₀} {a = a₀} {b = b₀}
-  {A = A₀} {G = G₀} _ _ _ evG evt evu _) =
-  tmRefl , tmRefl , tyEq A₀ a₀ b₀ , (evt , evu , evG)
-canonicalTermEq (compTmEqClosedQtr {a = a} {b = b} {A = A} _ _ _ evG evt evu _ _) =
-  tmClass a , tmClass b , tyQtr A , (evt , evu , evG)
+  Σ[ g ∈ RawTerm ] Σ[ h ∈ RawTerm ] (t =>e g) × (u =>e h)
+canonicalTermEq (compTmEqClosedTop _ _ _ _ evt evu) =
+  tmStar , tmStar , evt , evu
+canonicalTermEq (compTmEqClosedSigma {a = a} {b = b} {c = c} {d = d}
+  _ _ _ _ evt evu _ _) =
+  tmPair a b , tmPair c d , evt , evu
+canonicalTermEq (compTmEqClosedEq _ _ _ _ evt evu _) =
+  tmRefl , tmRefl , evt , evu
+canonicalTermEq (compTmEqClosedQtr {a = a} {b = b} _ _ _ _ evt evu _ _) =
+  tmClass a , tmClass b , evt , evu

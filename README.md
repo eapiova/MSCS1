@@ -28,7 +28,7 @@ A Tait-style logical-relations proof. The computability predicate is a
 recursive **function on type structure**; the fundamental theorem
 recurses on syntactic size. This development is:
 
-- **40 modules, every one `{-# OPTIONS --safe #-}`** (the larger proofs
+- **41 modules, every one `{-# OPTIONS --safe #-}`** (the larger proofs
   are split into `Minimal/`, `Inversion/` and `Fundamental/`
   subdirectories);
 - **zero `{-# TERMINATING #-}` pragmas, zero `postulate`, zero holes**;

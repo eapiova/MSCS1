@@ -14,14 +14,7 @@ open import Induction.WellFounded using (Acc ; acc)
 open import Recursive.Syntax
 open import Recursive.Substitution
 
-infix 40 _=>t_ _=>e_
-
-data _=>t_ : RawType -> RawType -> Type where
-  evalTop : tyTop =>t tyTop
-  evalSigma : {A B : RawType} -> tySigma A B =>t tySigma A B
-  evalEq : {A : RawType} {a b : RawTerm} -> tyEq A a b =>t tyEq A a b
-  evalQtr : {A : RawType} -> tyQtr A =>t tyQtr A
-  evalNat : tyNat =>t tyNat
+infix 40 _=>e_
 
 sigmaCompSub : RawTerm -> RawTerm -> Subst
 sigmaCompSub a b = consSubst b (consSubst a idSubst)

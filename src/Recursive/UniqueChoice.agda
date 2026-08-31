@@ -2,7 +2,8 @@
 
 -- The mechanisation of Proposition 9.6 of the paper: the rule of unique
 -- choice, requested by Maietti.  The construction keeps visible that ucFun
--- uses only uniqueness, while ucProof is the sole consumer of propositionality.
+-- needs existence and uniqueness but not propositionality of R, while
+-- ucProof is the sole consumer of the propositionality premise.
 
 module Recursive.UniqueChoice where
 
